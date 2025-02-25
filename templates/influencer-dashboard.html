@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Influencer Dashboard</title>
+    <link rel="stylesheet" href="/static/menu.css">
+    <link rel="stylesheet" href="/static/influencer.css">
+    <link rel="stylesheet" href="/static/sponsor.css">
+    <link href="https://fonts.googleapis.com/css2?family=Gupter:wght@400;500;700&family=Kalam:wght@300;400;700&family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+    <div class="menu">
+        <div class="menu-l-o">
+            Influencer Dashboard
+        </div>
+        <div class="menu-r-o">
+            <ul>
+                <li><a href="/influencerDashboard/None" style="color: rgb(4, 247, 247);">Profile</a></li>
+                <li><a href="/findcampaigns/None" >Find</a></li>
+                
+                <li><a href="/influencerLn/0" >Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        <div class="Dashboard-first-indent">
+            <div class="welcome-mess">
+                Welcome {{username}}
+            </div>
+        </div>
+
+        <br />
+        <br />
+    
+        <div class="campaign-dashboard-o">
+            {%for l in campaign_status%}
+                {%if l == "Active Campaigns" or l == "Nego Requests" or l == "Pending Requests"%}
+                    <div class="heading-campaign-dashboard">
+                        {{l}}
+                    </div>
+                    <div class="list-campaigns">
+                        {% if campaign_status[l] %}
+                        <ul>
+                            {% for i in campaign_status[l] %}
+                            <li>
+                                <div class="campaign-o">
+                                    <div class="row">
+                                        
+                                        <div class="col-sm-6 col-lg-3 campaign-title">{{i["campaign_name"]}}</div>
+                                        <div class="col-sm-6 col-lg-3 campaign-title">Progress : {{i["progress"]}} %</div>
+                                        <div class="col-sm-12 col-lg-6 justify-content-center align-item-center  button-o" >
+                                            <div class="view_button btn btn-info col-2" type = "button">
+                                                <a href="/influencerDashboard/{{i["campaign_id"]}}">
+                                                    View
+                                                </a>
+                                            </div>
+                                            </div>
+                                    </div>
+                                </div>
+                            </li>
+                            {%endfor%}
+                        </ul>
+                        
+                        {%else%}
+                            <div class="normall-info-mess" style="display: inline-block;">No {{l}}</div>
+                        {%endif%}
+                    </div>
+                {%endif%}
+            {%endfor%}
+        </div>
+
+        <br />
+        <br />
+
+
+        <div class="campaign-dashboard-o">
+            {% if campaign_status["New Requests"] %}
+            <div class="heading-campaign-dashboard">
+                New Requests :
+            </div>
+            <div class="list-campaigns">
+                
+                <ul>
+                    {% for i in campaign_status["New Requests"] %}
+                    <li>
+                        <div class="campaign-o">
+                            <div class="row">
+
+                                <div class="col-sm-6 col-lg-3 campaign-title">{{i["campaign_name"]}}</div>
+                                <div class="col-sm-6 col-lg-3 campaign-title">{{i["progress"]}}</div>
+                                <div class="col-sm-12 col-lg-6 justify-content-evenly align-item-center  button-o" >
+                                    <div class="view_button btn btn-info col-2" type = "button">
+                                        <a href="/influencerDashboard/{{i["campaign_id"]}}">
+                                            View
+                                        </a>
+                                    </div>
+                                    <div class="view_button btn btn-success col-2" type = "button">
+                                        <a href="/influenceracceptingsponsor/{{i['campaign_id']}}/{{i['influencer_id']}}">
+                                            Aceept
+                                        </a>
+                                    </div>
+                                    <div class="view_button btn btn-warning col-2" type = "button">
+                                    <a href="/influencerrejectinsponsor/{{i['campaign_id']}}/{{i['influencer_id']}}">
+                                        Reject
+                                    </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {%endfor%}
+                </ul>
+                
+                </div>
+            {%endif%}
+        </div>
+
+
+        <br />
+        <br />
+
+        {%if campaign_id != 'None'%}
+        <div class="pop-view-o">
+            <div class="pop-view">
+                <div class="p-2">
+                    <div class="btn btn-primary text-right">
+                        <a href="/influencerDashboard/None" style="color: rgb(185, 219, 30);">Close</a>
+                    </div>
+                </div>
+                <ul>
+                    <div class="row">
+                        <div class="col-6 h4">Campaign Name</div>
+                         <div class="col-3">{{formData["campaign_name"]}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 h4">Description </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="width: 100%; height: 15vh; overflow-y: scroll;">{{formData["description"]}}</div> 
+                    </div>
+                    <div class="row">
+                        <div class="col-6 h4">
+                        Goals </div>
+                        <div class="col-3">{{formData["goals"]}} months</div>
+                    </div>
+                    
+                        <div class="row">
+                            <div class="col-6 h4">Price</div>
+                            <div class="col-3">{{formData["price"]}} Rs.</div>
+                        </div>
+                    
+                    {%if formData["view"] == "New Requests" or formData["view"] == "Nego Requests"%}
+                       
+                        <form action="/influencerrequestsponsor/{{formData['campaign_id']}}" method="post">
+                            <div class="form-group p-2">
+                                <div>Message</div>
+                                <textarea class="form-control" id="message-input" rows = "4" name="message"></textarea>
+                            </div>
+                            <div class="form-group p-2">
+                                <div>Negotiating Price</div>
+                                <input type="number" class="form-control" id="message-input" name="negoPrice" />
+                            </div>
+                            <div class="text-center justify-content-center align-item-center p-2">
+                                <div class="btn btn-info" type="button">
+                                    <button type="submit" name="Negotiate" style="background-color: transparent; border: none;">Negotiate</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="form-group p-1  mx-auto" style="width: 100%;">
+                            <div class="justify-content-center align-item-center text-center">
+                        <a type="button" class="btn btn-success" href="/influenceracceptingsponsor/{{formData['campaign_id']}}/{{formData['influencer_id']}}">Accept</a>
+                        <a type="button" class="btn btn-warning" href="/influencerrejectinsponsor/{{formData['campaign_id']}}/{{formData['influencer_id']}}">Reject</a>
+                            </div></div>
+                    {%endif%}
+
+                </ul>
+            </div>
+        </div>
+        {%endif%}
+        {%for i in ["Active Campaigns", "New Requests", "Nego Requests", "Pending Requests"]%}
+            {% if not campaign_status[i] %}
+            <div>
+                <div class="heading-campaign-dashboard">
+                        
+                    {{i}}
+                    
+                </div>
+            <div class="normall-info-mess" style="display: inline-block;">No {{i}}</div>
+        </div>
+            {%endif%}
+        {%endfor%}
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+</body>
+</html>

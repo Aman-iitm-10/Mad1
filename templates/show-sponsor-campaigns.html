@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsor Campaigns</title>
+    <link rel="stylesheet" href="/static/menu.css">
+    <link rel="stylesheet" href="/static/sponsor.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gupter:wght@400;500;700&family=Kalam:wght@300;400;700&family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+    <div class="menu">
+        <div class="menu-l-o">
+            Show Sponser Campaigns
+        </div>
+        <div class="menu-r-o">
+            <ul>
+                <li><a href="/sponsorDashboard/None/None" >Profile</a></li>
+                <li><a href="/showSponsorCampaigns" style="color: rgb(4, 247, 247);">Campaigns</a></li>
+                
+                <li><a href="/" >Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        {%if data%}
+        <div class="display-campaigns container">
+            {%for i in data%}
+                <div class=""><h1>{{i}}</h1></div>
+                {% for j in data[i] %}
+                    <div class="campaign-card-o">
+                        <div class="campaign-card">
+                            <div class="row">
+                                <div class="col-6 campaign-heading">
+                                    Campaign name 
+                                </div> 
+                                <div class="col-5">
+                                    {{j["campaign_name"]}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 campaign-heading">
+                                    Campaign Description
+                                </div>
+                                <div class="col-5">
+                                    {{j["campaign_description"]}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 campaign-heading">
+                                    Influencer name
+                                </div>
+                                <div class="col-5">
+                                    {{j["influencer_name"]}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 campaign-heading">
+                                    Influencer Reac
+                                </div>
+                                <div class="col-5">
+                                    {{j["influencer_reac"]}}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-6 campaign-heading">
+                                    Goals
+                                </div>
+                                <div class="col-5">
+                                    {{j["goals"]}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 campaign-heading">
+                                    Price
+                                </div>
+                                <div class="col-5">
+                                    {{j["price"]}}
+                                </div>
+                            </div>
+                            
+                            {%if i != "CompletedCampaigns"%}
+                                <div class="row">
+                                    <div class="col-6 campaign-heading">
+                                        Duration
+                                    </div>
+                                    <div class="col-5">
+                                        {{j["duration"]}}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 campaign-heading">
+                                        Progress
+                                    </div>
+                                    <div class="col-5">
+                                        {{j["progress"]}}
+                                    </div>
+                                </div>
+                            {%endif%}
+                        </div>
+                    </div>
+                {%endfor%}
+            {%endfor%}
+        </div>
+        {%else%}
+        <div>No Campaigns</div>
+        {%endif%}
+        <br>
+        {%if showForm == 'None'%}
+        <div class="add-campaigns-heading">
+            <a href="/showSponsorCampaigns/None/'no'">&#65291</a>
+        </div>
+        {%endif%}
+    </div>
+    {%if showForm != 'None'%}
+    <form action="/showSponsorCampaigns/None/'None'" class="form-o" method="post">
+        <div class="form-group p-2">
+            <div>
+                Campaign name
+            </div>  
+            <input type="text" name="campaign_name" class="form-control" />
+        </div>
+        <div class="form-group p-2">
+            <div>
+                Description : 
+            </div>
+            <input type="text" name="description" class="form-control"/>
+        </div>
+        <div class="form-group p-2">
+            <div>
+                Price
+            </div>
+            <input type="number" name="price" class="form-control"/>
+        </div>
+        <div class="form-group p-2">
+            <div>
+                Goals
+            </div>
+            <input type="number" name="goals" class="form-control"/>
+        </div>
+        <div class="form-group p-2">
+            <div>
+                Duration
+            </div>
+            <input type="number" name="duration" class="form-control"/>
+        </div>
+        
+
+        <div style="overflow-y: scroll; height: 50px;">
+            Select influencer
+            <select name="re_to_in">
+                <option value="0">None</option>
+                {%if influencers%}
+                    {%for i in influencers%}
+                        {%if i["id"] != 0%}
+                        <option value="{{i["id"]}}" class="form-control"> Username : {{i["username"]}} Reach : {{i["rech"]}}</option>
+                        {%endif%}
+                    {%endfor%}
+                {%else%}
+                    No Influencers registered
+                {%endif%}
+            </select>
+        </div>
+        <div class="row justify-content-center">
+            
+            <a href="/showSponsorCampaigns/None/None" class="btn btn-warning p-2 col-2">Close</a>
+           <button type="submit" class="btn btn-success offset-1 col-2 p-1">Submit</button>
+        </div>
+    </form>
+    {%endif%}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

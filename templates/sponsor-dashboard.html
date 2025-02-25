@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsor Dashboard</title>
+    <link rel="stylesheet" href="/static/menu.css">
+    <link rel="stylesheet" href="/static/sponsor.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+    
+        <div class="menu">
+            <div class="menu-l-o">
+                Sponsor Dashboard
+            </div>
+            <div class="menu-r-o">
+                <ul>
+                    <li><a href="" style="color: rgb(4, 247, 247);">Profile</a></li>
+                    <li><a href="/showSponsorCampaigns/None/None" >Campaigns</a></li>
+                    
+                    <li><a href="/" >Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    <div class="container justify-content-evenly">
+        <div class="Dashboard-first-indent">
+            <div class="welcome-mess">
+                Welcome {{username}}
+            </div>
+        </div>
+
+        <br />
+        
+        {%for l in campaign_status%}
+        <div class="campaign-dashboard-o">
+            
+            <div class="heading-campaign-dashboard">
+                
+                 {{l}}
+                 
+            </div>
+            <div class="list-campaigns">
+                
+                <ul>
+                    {% for i in campaign_status[l] %}
+                    <li>
+                        <div class="campaign-o">
+                            <div class="row">
+                                <div class="col-sm-6 col-lg-3 campaign-title">{{i["campaign_n"]}}</div>
+                                <div class="col-sm-6 col-lg-3 campaign-title">Progress : {{i["progress"]}} %</div>
+                                <div class="col-sm-12 col-lg-6 justify-content-center align-item-center button-o " >
+                                    <div class="view_button btn btn-info col-2" type = "button">
+                                        <a href="/sponsorDashboard/{{i["campaign_id"]}}/{{i["influencer_id"]}}" >
+                                            View
+                                        </a>
+                                    </div>
+                                    {%if l == "New Requests"%}
+                                    <div class="view_button btn btn-accept btn-success col-2" type = "button">
+                                        <a href="/sponsoracceptinginfluencer/{{i["campaign_id"]}}/{{i["influencer_id"]}}" >
+                                            Accept
+                                        </a>
+                                    </div>
+                                    <div class="view_button btn btn-warning btn-info col-2" type = "button">
+                                        <a href="/sponsorrejectininfluencer/{{i["campaign_id"]}}/{{i["influencer_id"]}}" >
+                                            Rejec
+                                        </a>
+                                    </div>
+                                    {%endif%}
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </li>
+                    {%endfor%}
+                </ul>
+                
+            </div>
+            
+        </div>
+        {%endfor%}
+        {%for i in ["Active Campaigns", "New Requests", "Nego Requests", "Pending Requests"]%}
+            {% if not campaign_status[i] %}
+            <div>
+                <div class="heading-campaign-dashboard">
+                        
+                    {{i}}
+                    
+                </div>
+            <div class="normall-info-mess" style="display: inline-block;">No {{i}}</div>
+        </div>
+            {%endif%}
+        {%endfor%}
+        <br />
+        <br />
+
+    </div>
+    
+    {%if campaign_id != 'None' and influencer_id != 'None' %}
+        
+    <div class="pop-view container">
+       
+        <ul>
+            <li>
+                Campaign Name : {{formData["campaign_n"]}}
+            </li>
+            <li class="col-12" style="width: 100%; height: 15vh; overflow-y: scroll;"> 
+                Description : {{formData["description"]}}
+            </li>
+            <li>
+                Influencer Name : {{formData["influencer_name"]}}
+            </li>
+            <li>
+                Influencer Reac : {{formData["influencer_reac"]}}
+            </li>
+            <li>
+                Original Price : {{formData["price"]}}
+            </li>
+            
+            
+            {%if formData["message"]%}
+                Message from Influencer : {{formData["message"]}}
+                Price asked by Influencer : {{formData["price"]}}
+            {%endif%}
+            {%if formData["view"] == "Active Campaigns" or formData["view"] == "Pending Requests"%}
+                <a href="/sponsorDashboard/None/None" >Close</a>
+            {%elif formData["view"] == "New Requests" or formData["view"] == "Nego Requests"%}
+                <a href="/sponsorDashboard/None/None" >Close</a>
+                <form action="/sponsornegoinfluencer/{{formData['campaign_id']}}/{{formData['influencer_id']}}" method="post">
+                    <div class="form-group p-2">
+                       <div>Message </div> 
+                       <textarea type="text" name="message" class="form-control"> </textarea>
+                    </div>
+                    <div class="form-group p-2">
+                    <div>
+                        Negotiating Price
+                    </div>
+                    <input type="number" name="negoPrice" class="form-control" rows="3"/>
+                    </div>
+                    <div class="text-center justify-content-center align-item-center p-2">
+                        <div class="btn btn-info" type="button">
+                            <button type="submit" name="Negotiate" class="btn btn-info">Negotiate</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="form-group p-1  mx-auto" style="width: 100%;">
+                    <div class="justify-content-center align-item-center text-center">
+                        <a href="/sponsoracceptinginfluencer/{{formData['campaign_id']}}/{{formData['influencer_id']}}" class="btn btn-success">Accept</a>
+                        <a href="/sponsorrejectininfluencer/{{formData['campaign_id']}}/{{formData['influencer_id']}}" class="btn btn-warning">Reject</a>
+                    </div>
+                </div>
+
+            {%endif%}
+
+        </ul>
+    </div>
+    {%endif%}
+     <style>
+        .heading-campaign-dashboard {
+            display: inline-block;
+        }
+    </style>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</body>
+</html>

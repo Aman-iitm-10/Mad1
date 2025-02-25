@@ -1,0 +1,42 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.menu {
+    width: 100%;
+    height: fit-content;
+    padding: 2% 1.5% 2% 1.5%;
+    background-color: rgb(3, 3, 68);
+    display: flex;
+}
+
+.menu-l-o {
+    vertical-align: center;
+    font-size: 30px;
+    color: #314fa0;
+    width: fit-content;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.menu-r-o{
+    float: right;
+    
+    text-align: right;
+    margin-left: auto;
+    margin-right: 10%;
+}
+
+.menu-r-o ul {
+    display: flex;
+    list-style: none;
+    float: right;
+    font: 1em sans-serif;
+}
+.menu-r-o ul li {
+    padding: 5%;
+}
+
+a {
+    color: #67679c;
+}
